@@ -1,0 +1,19 @@
+(rule
+ (targets demo_generated_stubs.ml)
+ (action
+  (run stubs/gen_stubs.exe ml %{targets})))
+
+(rule
+ (targets demo_generated_stubs.c)
+ (action
+  (run stubs/gen_stubs.exe c %{targets})))
+
+(library
+ (name demo)
+ (public_name demo)
+ (libraries ctypes demo.stubs)
+ (foreign_stubs
+  (language c)
+  (names demo_generated_stubs))
+ (flags
+  (:standard -w -4)))

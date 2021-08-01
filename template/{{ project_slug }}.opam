@@ -4,15 +4,17 @@ synopsis: "{{ project_description }}"
 description: """
 {{ project_description }}
 """
-maintainer: ["{{ username }}{% if author_email %} <{{ author_email }}>{% endif %}"]
-authors: ["{{ username }}{% if author_email %} <{{ author_email }}>{% endif %}"]
-license: "MIT"
+maintainer: ["{{ author_name }}{% if author_email %} <{{ author_email }}>{% endif %}"]
+authors: ["{{ author_name }}{% if author_email %} <{{ author_email }}>{% endif %}"]
+license: "ISC"
+{%- if github_username %}
 homepage: "https://github.com/{{ github_username }}/{{ project_slug }}"
 doc: "https://{{ github_username }}.github.io/{{ project_slug }}"
-bug-reports: "https://github.com/{{ github_username }}/{{ project_slug }}/issues"
+bug-reports: "https://github.com/{{ github_username }}/{{ project_slug }}/issues"{% endif %}
 depends: [
   "ocaml" {>= "4.08.0"}
   "dune" {>= "2.0"}
+  "ctypes"
   {% if test_framework == 'Alcotest' -%}
   "alcotest" {with-test}
   {% endif -%}
@@ -20,10 +22,9 @@ depends: [
   {% if syntax == 'Reason' -%}
   "reason" {build}
   {% endif -%}
-  "ctypes"
 ]
 build: [
-  ["dune" "subst"] {pinned}
+  ["dune" "subst"] {dev}
   [
     "dune"
     "build"
@@ -36,4 +37,5 @@ build: [
     "@doc" {with-doc}
   ]
 ]
-dev-repo: "git+https://github.com/{{ github_username }}/{{ project_slug }}.git"
+{%- if github_username %}
+dev-repo: "git+https://github.com/{{ github_username }}/{{ project_slug }}.git"{% endif %}
